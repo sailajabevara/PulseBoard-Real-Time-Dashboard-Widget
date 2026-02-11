@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import WebSocketClient from "./services/websocket";
+import RealtimeMetric from "./components/RealtimeMetric";
 
 function App() {
 
@@ -15,9 +16,11 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Realtime Dashboard</h1>
-    </div>
+   <div style={{ padding: "40px" }}>
+  <h1>Realtime Dashboard</h1>
+
+  <RealtimeMetric />
+</div>
   );
 }
 

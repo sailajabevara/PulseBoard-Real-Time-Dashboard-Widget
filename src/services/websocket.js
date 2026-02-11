@@ -1,49 +1,59 @@
 class WebSocketClient {
   constructor(url) {
     this.url = url;
-    this.socket = null;
-    this.listeners = [];
-    this.reconnectDelay = 3000;
+    this.ws = null;
+    this.messageCallback = null;
+    this.openCallback = null;
+    this.closeCallback = null;
   }
 
   connect() {
-    this.socket = new WebSocket(this.url);
+    this.ws = new WebSocket(this.url);
 
-    this.socket.onopen = () => {
-      console.log(" Connected to WebSocket");
+    this.ws.onopen = () => {
+      console.log("Connected to WebSocket");
+      if (this.openCallback) this.openCallback();
     };
 
-    this.socket.onmessage = (event) => {
+    this.ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        this.listeners.forEach((cb) => cb(data));
-      } catch (err) {
-        console.error("Invalid JSON:", err);
+        if (this.messageCallback) {
+          this.messageCallback(data);
+        }
+      } catch (error) {
+        console.error("Invalid JSON:", error);
       }
     };
 
-    this.socket.onerror = (err) => {
-      console.error("WebSocket error:", err);
+    this.ws.onclose = () => {
+      console.log("Disconnected. Reconnecting...");
+      if (this.closeCallback) this.closeCallback();
+
+      setTimeout(() => {
+        this.connect();
+      }, 3000);
     };
 
-    this.socket.onclose = () => {
-      console.log("Disconnected. Reconnecting...");
-      setTimeout(() => this.connect(), this.reconnectDelay);
+    this.ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
     };
   }
 
   subscribe(callback) {
-    this.listeners.push(callback);
+    this.messageCallback = callback;
   }
 
-  sendMessage(data) {
-    if (this.socket?.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(data));
-    }
+  onOpen(callback) {
+    this.openCallback = callback;
+  }
+
+  onClose(callback) {
+    this.closeCallback = callback;
   }
 
   disconnect() {
-    this.socket?.close();
+    this.ws.close();
   }
 }
 
