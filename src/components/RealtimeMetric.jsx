@@ -1,47 +1,54 @@
-import { useEffect, useState } from "react";
-import WebSocketClient from "../services/websocket";
+// import { useContext } from "react";
+// import { WebSocketContext } from "../contexts/WebSocketContext";
 
-const ws = new WebSocketClient(import.meta.env.VITE_WS_URL);
+// function RealtimeMetric() {
 
-function RealtimeMetric() {
+//   const { metric, status } = useContext(WebSocketContext);
 
-  const [metric, setMetric] = useState(0);
-  const [status, setStatus] = useState("Connecting...");
+//   return (
+//     <div style={{
+//       padding: "20px",
+//       border: "2px solid #ddd",
+//       borderRadius: "10px",
+//       width: "300px"
+//     }}>
+//       <h2>Active Users</h2>
 
-  useEffect(() => {
+//       <h1>{metric}</h1>
 
-    ws.connect();
+//       <p>Status: {status}</p>
+//     </div>
+//   );
+// }
 
-    ws.onOpen(() => {
-      setStatus("Connected ✅");
-    });
+// export default RealtimeMetric;
 
-    ws.onClose(() => {
-      setStatus("Disconnected ❌");
-    });
+import { useContext } from "react";
+import { WebSocketContext } from "../contexts/WebSocketContext";
 
-    ws.subscribe((data) => {
-      if (data.type === "metric") {
-        setMetric(data.value);
-      }
-    });
+const RealtimeMetric = () => {
 
-  }, []);
+  const { metric, status } = useContext(WebSocketContext);
+
+  const getStatusColor = () => {
+    if (status === "Connected") return "green";
+    if (status === "Disconnected") return "red";
+    return "orange";
+  };
 
   return (
-    <div style={{
-      padding: "20px",
-      border: "2px solid #ddd",
-      borderRadius: "10px",
-      width: "300px"
-    }}>
+    <div>
       <h2>Active Users</h2>
 
-      <h1>{metric}</h1>
+      <h1 style={{ fontSize: "48px", margin: "10px 0" }}>
+        {metric === 0 ? "Loading..." : metric}
+      </h1>
 
-      <p>Status: {status}</p>
+      <p style={{ color: getStatusColor(), fontWeight: "bold" }}>
+        Status: {status}
+      </p>
     </div>
   );
-}
+};
 
 export default RealtimeMetric;

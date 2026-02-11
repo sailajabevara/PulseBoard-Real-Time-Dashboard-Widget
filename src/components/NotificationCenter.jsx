@@ -1,45 +1,18 @@
-import { useEffect, useState } from "react";
-import WebSocketClient from "../services/websocket";
 
-const ws = new WebSocketClient(import.meta.env.VITE_WS_URL);
+
+
+import { useContext } from "react";
+import { WebSocketContext } from "../contexts/WebSocketContext";
 
 function NotificationCenter() {
 
-  const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-
-    ws.connect();
-
-    ws.subscribe((data) => {
-
-      if (data.type === "notification") {
-
-        setNotifications((prev) => [
-          ...prev,
-          {
-            id: Date.now(),
-            title: data.title,
-            message: data.message
-          }
-        ]);
-
-      }
-
-    });
-
-  }, []);
-
-  const removeNotification = (id) => {
-    setNotifications(notifications.filter(n => n.id !== id));
-  };
-
-  const clearAll = () => {
-    setNotifications([]);
-  };
+  const {
+    notifications,
+    removeNotification,
+    clearAll
+  } = useContext(WebSocketContext);
 
   return (
-
     <div style={{
       marginTop: "30px",
       padding: "20px",
@@ -64,7 +37,6 @@ function NotificationCenter() {
             borderRadius: "8px"
           }}
         >
-
           <strong>{n.title}</strong>
           <p>{n.message}</p>
 
@@ -77,7 +49,6 @@ function NotificationCenter() {
       ))}
 
     </div>
-
   );
 }
 
