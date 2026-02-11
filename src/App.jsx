@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import WebSocketClient from "./services/websocket";
 import RealtimeMetric from "./components/RealtimeMetric";
+import NotificationCenter from "./components/NotificationCenter";
+
 
 function App() {
 
@@ -18,8 +20,8 @@ function App() {
   return (
    <div style={{ padding: "40px" }}>
   <h1>Realtime Dashboard</h1>
-
   <RealtimeMetric />
+<NotificationCenter />
 </div>
   );
 }
