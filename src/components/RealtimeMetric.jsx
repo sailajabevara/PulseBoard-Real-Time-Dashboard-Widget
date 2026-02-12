@@ -39,7 +39,7 @@ const RealtimeMetric = () => {
         {metric === 0 ? "Loading realtime data..." : metric}
       </h1>
 
-      {/* Status with color */}
+      {/* nStatus with color */}
       <p
         style={{
           fontWeight: "bold",
