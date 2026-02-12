@@ -1,27 +1,4 @@
-// import { useContext } from "react";
-// import { WebSocketContext } from "../contexts/WebSocketContext";
 
-// function RealtimeMetric() {
-
-//   const { metric, status } = useContext(WebSocketContext);
-
-//   return (
-//     <div style={{
-//       padding: "20px",
-//       border: "2px solid #ddd",
-//       borderRadius: "10px",
-//       width: "300px"
-//     }}>
-//       <h2>Active Users</h2>
-
-//       <h1>{metric}</h1>
-
-//       <p>Status: {status}</p>
-//     </div>
-//   );
-// }
-
-// export default RealtimeMetric;
 
 import { useContext } from "react";
 import { WebSocketContext } from "../contexts/WebSocketContext";
@@ -38,15 +15,40 @@ const RealtimeMetric = () => {
 
   return (
     <div>
+
       <h2>Active Users</h2>
 
+      {/*Show warning when disconnected */}
+      {status === "Disconnected" && (
+        <div
+          style={{
+            background: "#ffe5e5",
+            padding: "10px",
+            borderRadius: "8px",
+            marginBottom: "10px",
+            color: "red",
+            fontWeight: "bold"
+          }}
+        >
+           Connection lost. Trying to reconnect...
+        </div>
+      )}
+
+      {/*  Loading state */}
       <h1 style={{ fontSize: "48px", margin: "10px 0" }}>
-        {metric === 0 ? "Loading..." : metric}
+        {metric === 0 ? "Loading realtime data..." : metric}
       </h1>
 
-      <p style={{ color: getStatusColor(), fontWeight: "bold" }}>
+      {/* Status with color */}
+      <p
+        style={{
+          fontWeight: "bold",
+          color: getStatusColor(),
+        }}
+      >
         Status: {status}
       </p>
+
     </div>
   );
 };
