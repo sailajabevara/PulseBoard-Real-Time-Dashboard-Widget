@@ -1,9 +1,10 @@
 
-
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import WebSocketClient from "../services/websocket";
 
 export const WebSocketContext = createContext();
+
+const ws = new WebSocketClient(import.meta.env.VITE_WS_URL);
 
 export const WebSocketProvider = ({ children }) => {
 
@@ -12,8 +13,6 @@ export const WebSocketProvider = ({ children }) => {
   const [status, setStatus] = useState("Connecting...");
 
   useEffect(() => {
-
-    const ws = new WebSocketClient(import.meta.env.VITE_WS_URL);
 
     ws.connect();
 
@@ -34,17 +33,16 @@ export const WebSocketProvider = ({ children }) => {
       if (data.type === "notification") {
         setNotifications(prev => [
           {
-            id: crypto.randomUUID(),
+            id: crypto.randomUUID(), // prevents duplicate key error
             title: data.title,
             message: data.message
           },
           ...prev
-        ]);
+        ].slice(0,5));
       }
 
     });
 
-  
     return () => {
       ws.disconnect();
     };
@@ -52,9 +50,7 @@ export const WebSocketProvider = ({ children }) => {
   }, []);
 
   const removeNotification = (id) => {
-    setNotifications(prev =>
-      prev.filter(n => n.id !== id)
-    );
+    setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
   const clearAll = () => {

@@ -1,3 +1,4 @@
+import React from "react";
 import RealtimeMetric from "./components/RealtimeMetric";
 import NotificationCenter from "./components/NotificationCenter";
 import "./App.css";
