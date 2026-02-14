@@ -4,7 +4,9 @@ import WebSocketClient from "../services/websocket";
 
 export const WebSocketContext = createContext();
 
-const ws = new WebSocketClient(import.meta.env.VITE_WS_URL);
+
+const wsClient = new WebSocketClient(import.meta.env.VITE_WS_URL);
+
 
 export const WebSocketProvider = ({ children }) => {
 
@@ -14,40 +16,41 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
 
-    ws.connect();
+  wsClient.connect();
 
-    ws.onOpen(() => {
-      setStatus("Connected");
-    });
+  wsClient.onOpen(() => {
+    setStatus("Connected");
+  });
 
-    ws.onClose(() => {
-      setStatus("Disconnected");
-    });
+  wsClient.onClose(() => {
+    setStatus("Disconnected");
+  });
 
-    ws.subscribe((data) => {
+  wsClient.subscribe((data) => {
 
-      if (data.type === "metric") {
-        setMetric(data.value);
-      }
+    if (data.type === "metric") {
+      setMetric(data.value);
+    }
 
-      if (data.type === "notification") {
-        setNotifications(prev => [
-          {
-            id: crypto.randomUUID(), // prevents duplicate key error
-            title: data.title,
-            message: data.message
-          },
-          ...prev
-        ].slice(0,5));
-      }
+    if (data.type === "notification") {
+      setNotifications(prev => [
+        {
+          id: crypto.randomUUID(),
+          title: data.title,
+          message: data.message
+        },
+        ...prev
+      ].slice(0,5));
+    }
 
-    });
+  });
 
-    return () => {
-      ws.disconnect();
-    };
+  return () => {
+    wsClient.disconnect();
+  };
 
-  }, []);
+}, []);
+
 
   const removeNotification = (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id));

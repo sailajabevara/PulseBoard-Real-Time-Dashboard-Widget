@@ -1,5 +1,4 @@
 
-
 import React, { useContext } from "react";
 import { WebSocketContext } from "../contexts/WebSocketContext";
 
@@ -15,7 +14,7 @@ const NotificationCenter = () => {
     <div style={{ marginTop: "30px" }} aria-live="polite">
 
       <h2>
-        Notifications 🔔
+        Notifications 
       </h2>
 
       <button

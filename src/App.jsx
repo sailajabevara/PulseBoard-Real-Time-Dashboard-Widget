@@ -5,11 +5,12 @@ import "./App.css";
 
 function App() {
   return (
-    <div className="dashboard">
+    <div className="container">
 
-      <h1>Realtime Dashboard</h1>
+      <h1 className="title">Realtime Dashboard</h1>
 
-      <div className="cards">
+      <div className="dashboard-grid">
+        
         <div className="card">
           <RealtimeMetric />
         </div>
@@ -17,6 +18,7 @@ function App() {
         <div className="card">
           <NotificationCenter />
         </div>
+
       </div>
 
     </div>

@@ -1,6 +1,11 @@
 const WebSocket = require("ws");
 
-const wss = new WebSocket.Server({ port: 8080 });
+// const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({
+  port: 8080,
+  host: "0.0.0.0"
+});
+
 
 console.log("WebSocket Server running on ws://localhost:8080");
 
